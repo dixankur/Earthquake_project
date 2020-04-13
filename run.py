@@ -1,5 +1,5 @@
 """
-Created on Sat Apr 11 09:17:47 2020
+Created on Sun Apr 12 09:17:47 2017
 @author: ankurD
 """
 import config
@@ -16,7 +16,8 @@ def prediction_process(eq_prediction):
     To initialize the earthquake prediction process
     :param eq_prediction: earthquake prediction object
     """
-    dates = pd.date_range(*(pd.to_datetime([eq_prediction.start_date, eq_prediction.end_date]) + pd.offsets.MonthEnd()), freq='10D')
+    dates = pd.date_range(*(pd.to_datetime([eq_prediction.start_date, eq_prediction.end_date])), freq='10D')
+    log.info(dates)
     log.info(f"Creating ThreadPoolExecuter ...")
     total = len(dates)
     with ThreadPoolExecutor(max_workers=config.THREADPOOL_SIZE) as executor:
@@ -24,6 +25,7 @@ def prediction_process(eq_prediction):
         st      = eq_prediction.start_date
         for i, dt in enumerate(dates):
             dt = dt.strftime("%Y-%m-%d")
+            log.info(f"processing for date {dt}")
             future = executor.submit(eq_prediction.load_data, st, dt)
             futures[future] = (i, st, dt)
             st = dt
@@ -40,9 +42,7 @@ def prediction_process(eq_prediction):
                 threading.current_thread().setName(f"Thread[{i}/{total}][{__name__}]")
 
     ## create stats
-    eq_prediction.create_hist()
-    eq_prediction.create_violin()
-    eq_prediction.create_linechart()
+    eq_prediction.create_stats()
 
 
 if __name__ == "__main__":

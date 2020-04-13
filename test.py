@@ -1,5 +1,5 @@
 """
-Created on Sun Apr 12 09:17:47 2020
+Created on Sun Apr 12 09:17:47 2017
 @author: ankurD
 """
 import unittest
@@ -27,8 +27,9 @@ class TestEQPrediction(unittest.TestCase):
         eq_prediction.load_data(start_date, end_date)
         df       = eq_prediction.const_bigdata
         rows_cnt = len(df.index)
-
-        self.assertFalse(rows_cnt, 100)
+        
+#        self.assertFalse(rows_cnt, 100)
+        self.assertEqual(rows_cnt, 5763)
 
 
 if __name__ == '__main__':
